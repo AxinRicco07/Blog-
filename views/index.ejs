@@ -1,0 +1,71 @@
+<%- include('partials/header.ejs') %>
+
+
+<main>
+    <div class="container">
+        <div id="post-form">
+            <h2>Create New Post</h2>
+            <form id="new-post-form" action="/submit" method="post">
+                <input type="text" id="post-title" placeholder="Title" name="post-title" required class="form-control mb-2">
+                <textarea id="post-content" placeholder="Content" name="post-content" required class="form-control mb-2"></textarea>
+                <input type="text" id="author-name" placeholder="Author" name="author_name" required class="form-control mb-2">
+                <button type="submit" class="btn btn-outline-success">Create Post</button>
+            </form>
+        </div>
+        <div id="posts">
+            <h2>All Posts</h2>
+            <div id="posts-list">
+                <% (locals.posts || []).forEach((post, index) => { %>
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <%= post.title %>
+                    </div>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p><%= post.content %></p>
+                            <footer class="blockquote-footer">
+                                <cite title="Source Title"><%= post.author %></cite>
+                            </footer>
+                        </blockquote>
+                        <!-- Edit Button -->
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-<%= index %>">Edit</button>
+                        <!-- Delete Form -->
+                        <form action="/delete/<%= index %>" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal-<%= index %>" tabindex="-1" aria-labelledby="editModalLabel-<%= index %>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel-<%= index %>">Edit Post</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/edit/<%= index %>" method="post">
+                                    <input type="text" name="post-title" class="form-control mb-2" value="<%= post.title %>" required>
+                                    <textarea name="post-content" class="form-control mb-2" required><%= post.content %></textarea>
+                                    <input type="text" name="author_name" class="form-control mb-2" value="<%= post.author %>" required>
+                                    <button type="submit" class="btn btn-outline-success">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer.ejs') %>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+</body>
+</html>
